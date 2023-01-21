@@ -4,6 +4,8 @@ These components allow Video Streaming into Decentraland at Ultra Low Latency (<
 
 Ultra Low Latency Video enables a number of applications that are not possible with higher latency video streams.
 
+***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project with changes showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, reviews from stakeholders and end users documentation are complete.***
+
 ### Project Scope
 
 Streaming low latency video into Decentraland requires three destinct steps:
@@ -212,6 +214,10 @@ Anyone who wants a mew provider will need the following to get started.
   - Setup a test page in a basic HTML page with a <video> tag that displays a published live WebRTC stream with ultra low latency.
   - Isolate the setup logic.
   - Write the provider. You can follow the example in the codebase for the AntMediaServer provider file.
+  
+### Platform Support
+
+WebRTC is an standard and implementations are available on most platforms.  Porting to Desktop, mobile devices, VR require those platforms have publicly available WebRTC APIs. See, for example [WinRTC](https://learn.microsoft.com/en-us/winrtc/).
   
 ### Next Steps
 
