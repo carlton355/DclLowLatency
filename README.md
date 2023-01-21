@@ -6,6 +6,8 @@ Ultra Low Latency Video enables a number of applications that are not possible w
 
 ***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project with changes showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, reviews from stakeholders and end users documentation are complete.***
 
+** This repo is large and contains npm node_module files since some @dcl packages have been modified. ** 
+
 ### Project Scope
 
 Streaming low latency video into Decentraland requires three destinct steps:
