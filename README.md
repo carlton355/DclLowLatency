@@ -60,9 +60,9 @@ One of the main aims of the architecture is to hide the complications of the Web
 
 We first introduce two new components to the SDK to handle realtime streams.
 
-**VideoRealtimeTexture:** A new component in the Unity Renderer project that provides the texture capable of rendering the video. It is based on the standard Video texture component and has some differences around configuration and extra communication messagaes with the Decentraland Kernel.
+**VideoRealtimeTexture:** A new component in the Unity Renderer project that provides the texture capable of rendering the video. It is based on the standard Video texture component and has some differences around configuration and extra communication [messages](https://github.com/carlton355/DclLowLatency/blob/main/unity-renderer/unity-renderer/Assets/Scripts/MainScripts/DCL/WebInterface/Interface.cs#L1765) with the Decentraland Kernel. See [VideoRealtimeTexture](https://github.com/carlton355/DclLowLatency/blob/main/unity-renderer/unity-renderer/Assets/Scripts/MainScripts/DCL/Components/Video/DCLVideoRealtimeTexture.cs)
 
-**VideoRealtimeStream:** This is a configuration object used to hold data used for setting up the stream connections.
+**VideoRealtimeStream:** This is a configuration object used to hold data used for setting up the stream connections. See [VideoRealtimeStream](https://github.com/carlton355/DclLowLatency/blob/main/unity-renderer/unity-renderer/Assets/Scripts/MainScripts/DCL/Components/Video/DCLVideoRealtimeStream.cs)
 
 This is best illustrated by comparing the current SDK VideoTexture and VideoClip and the new VideoRealtimeTexture and VideoRealtimeStream components.
 
@@ -79,7 +79,7 @@ const videoTexture = new VideoRealtimeTexture(stream);
 ```
 This keeps a similar experience for the SDK user.
 
-**Unity WebVideoPlayer**: The Unity WebVideoPlayer plugin was changed to handles WebRTC streams within the Unity Plug in WebVideoPlayer.jslib.
+**Unity WebVideoPlayer**: The Unity WebVideoPlayer plugin was changed to handles WebRTC streams within the Unity Plug in [WebVideoPlayer.jslib](https://github.com/carlton355/DclLowLatency/blob/main/unity-renderer/unity-renderer/Assets/Scripts/MainScripts/DCL/Components/Video/Plugins/WebVideoPlayer.jslib).
 
 #### Performance
 
