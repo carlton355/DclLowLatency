@@ -6,7 +6,9 @@ Ultra Low Latency Video enables a number of applications that are not possible w
 
 ***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, reviews from stakeholders and end users are complete and documentation is ready.***
 
-** This repo is large and contains npm node_module files since some @dcl packages have been modified. ** 
+**This repo is large and contains npm node_module files since some @dcl packages have been modified.** 
+
+See [What's New](#whats-new) for an update on what we are working on now and next.
 
 ### Project Scope
 
@@ -233,4 +235,16 @@ WebRTC is an standard and implementations are available on most platforms.  Port
 - Writing a second WebRTC Provider perhaps for Janus WebRTC Server.
 - SDK7 version
 - Creating a Smart Item with the new SDK7 smart items when it is available.
+
+### What's New
+
+We are working on:
+- A better way to setup the test project from this repo.
+- Getting the "Just a Video Screen" test passing with code and instructions from this repo.
+
+What's next
+- Continuing with test scenes to work towards getting them all developed and passing.
+- Preparing for user testing.
+- Writing documentation for Decentraland [Docs](https://docs.decentraland.org/).
+
   
