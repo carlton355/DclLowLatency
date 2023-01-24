@@ -1,9 +1,0 @@
-public/
-docs/
-static/
-scripts/
-coverage/
-targets/
-*.js
-*.d.ts
-*.json
