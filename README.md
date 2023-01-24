@@ -4,7 +4,11 @@ These components allow Video Streaming into Decentraland at Ultra Low Latency (<
 
 Ultra Low Latency Video enables a number of applications that are not possible with higher latency video streams.
 
-***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project with changes showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, reviews from stakeholders and end users documentation are complete.***
+***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, reviews from stakeholders and end users are complete and documentation is ready.***
+
+**This repo is large and contains npm node_module files since some @dcl packages have been modified.** 
+
+See [What's New](#whats-new) for an update on what we are working on now and next.
 
 ### Project Scope
 
@@ -16,10 +20,10 @@ Streaming low latency video into Decentraland requires three destinct steps:
 
 The scope of this project delivers the components required for step three.
 
-For information on compatible servers see here.
-For information on setting up OBS see here.
+For information on compatible servers see [here](#getting-a-stream).
+For information on setting up OBS see [here](#using-obs-to-publish-a-stream).
 
-Note that the VideoTexture component in the Decentraland SDK cannot render Ultra Low Latency streams. The protocols they support typically operate on a 10-15 second delay. The DclLowLatency components support sub 500ms latency.
+Note that the VideoTexture component in the Decentraland SDK cannot render Ultra Low Latency streams. The protocols they support typically operate on a 10-15 second delay. These DclLowLatency components support sub 500ms latency.
 
 ### Users
 
@@ -31,8 +35,8 @@ The components were developed with Decentraland SDK (decentraland-ecs) 6.11.10
 
 ### Audience
 
-If you are a Decentraland SDK user and just want to try the components then skip to the section on testing here.
-If you are more interested in the internals and wish to code review or contribute somehow - then welcome! - there's lots of additional information here for you too.
+If you are a Decentraland SDK user and just want to try the components in a simple scene, then skip to the section on testing [here](#running-a-test-scene-with-the-realtime-components).
+If you are more interested in the internals and wish to code review or contribute somehow - then welcome!. There's lots of additional information here for you too.
 
 ### Requirements
 
@@ -56,7 +60,7 @@ The main tech to be considered is WebRTC which supports ultra-low latency video.
 
 ### Architectural Approach
 
-One of the main aims of the architecture is to hide the complications of the WebRTC protocol from the user. WebRTC uses signaling servers, stun servers and a moderately complex protocol that we do not want to bother the user with.
+One of the main aims of the architecture is to hide the complications of the WebRTC protocol from the user. WebRTC uses signaling servers, stun servers and a moderately complex protocol that we do not want to bother the SDK user with.
 
 #### Main SDK Components
 
@@ -81,19 +85,23 @@ const videoTexture = new VideoRealtimeTexture(stream);
 ```
 This keeps a similar experience for the SDK user.
 
+How it works under the hood:
+
 **Unity WebVideoPlayer**: The Unity WebVideoPlayer plugin was changed to handles WebRTC streams within the Unity Plug in [WebVideoPlayer.jslib](https://github.com/carlton355/DclLowLatency/blob/main/unity-renderer/unity-renderer/Assets/Scripts/MainScripts/DCL/Components/Video/Plugins/WebVideoPlayer.jslib).
 
 #### Performance
 
-Our research showed that pushing the rendering down to base OS level gave much better performance results than trying to handle WebRTC from within the scene.
+Our research showed that pushing the rendering down to base OS level gave much better performance results than trying to handle WebRTC from within a Unity scene.
 
 #### The Provider Model
 
-There are a number of WebRTC Servers available. Some are free and open source such as Janus WebRTC Server while others are high end platform services such as Wowza.  It is also expected that users of the components will likely range from small hobby users up to larger corporate events, perhaps with tens of thousands of users.
+There are a number of WebRTC Servers available. Some are free and open source such as Janus WebRTC Server while others are high-end platform services such as Wowza.  It is also expected that users of the components will likely range from small hobby users up to larger corporate events, perhaps with tens of thousands of users.
 
-To support a range of different servers we have introduced a provider model where each supported server needs to implement an interface for connection and resource handling. The provider also handles connections to stun servers, signaling and the WebRTC protocol.
+There is also no standard for signaling and different servers handle signaling in different ways.
 
-We have chosen to implement a provider for Ant Media Server Enterprise because it is our preferred WebRTC server. It is commercial grade but can also be setup relatively cost effectively within AWS or Azure for live events. They are expensive to run 24/7. It can also scale up to tens of thousands of viewers.
+To support a range of different servers we have introduced a provider model where each supported server needs to implement an interface for connection and resource handling. The provider also handles connections to stun servers, signaling and the WebRTC client handling of the WebRTC protocol.
+
+We have chosen to implement a provider for Ant Media Server Enterprise because it is our preferred WebRTC server. Ant Media Server Enterprise is commercial grade and can also be setup relatively cost effectively within AWS or Azure for short live events. They are expensive to run 24/7. It can also scale up to tens of thousands of viewers.
 
 It is expected that other servers will be implemented by the community, with Janus WebRTC looking like a popular choice for the second provider to be implemented. Janus WebRTC is free and open source.
 
@@ -129,10 +137,10 @@ class AntMediaEnterpriseProvider
 ```
 
 #### Kernel Messages
-The new Unity components communicate with the Browser throught the Unity Web Interface. They essentially send setup and tear down messages to instruct the system to load and destroy the providers.  Play and stop messaged are handled throught the WebVideoPlayer via a video tag in the browser which then connects to the underlying WebRTC implementation in the browser.
+The new Unity components communicate with the Browser throught the Unity Web Interface. They essentially send setup and tear down messages to instruct the system to load and destroy the providers.  Play and stop messaged are handled throught the WebVideoPlayer via a video tag in the browser which then connects to the underlying WebRTC implementation in the browser. Considering various aspects such as performace, reuse and portability to future SDK, our research identified this approach as optimal.
 
 #### Security
-A provider specific security mechanism may be available to ensure playing of streams only when the use is authorized. The Decentraland scene can be setup to call an API to issue the token. This is an advanced feature and we will support it in the AntMediaEnterprise provider.
+A provider specific security mechanism may be available to ensure playing of streams only when the use is authorized. To support this a Decentraland SDK scene developer needs to be able to obtain an authorization token from a legitimate source.  This could be, for example, a call to an API to issue the token. This is an advanced feature and we will support it in the AntMediaEnterprise provider.
 
 ### Test Cases and Test Scenes
 
@@ -160,9 +168,11 @@ There may be licensing considerations with using sample connection code from Web
 
 ### Running a Test Scene with the Realtime Components
 
+**Note: We are working on simpler way to do this.  Stay tuned.** 
+
 These components are not yet an offical part of the SDK. If you'd like to run the sample code, use this process. Don't run ***npm install*** on the files as all the node modules are already included and some have been modified for this test.
 
-First ensure you have a stream that you are running. See here if you don't have a stream.
+First ensure you have a stream that you are running.
 You'll need to be running the Decentraland SDK version 6.11.10
 
 Clone the repo:
@@ -194,7 +204,7 @@ You should see a blank black screen on a preview scene. Click the block to start
 
 I am able to run a test server for anyone testing this. You can buzz me on Discord for details.
 
-Otherwise, an Ant Media Enterprise Server is available in the Azure market place. It sets up a VM that can be held in 'unallocated' state to save cost and put live for testing on demand.  Let me know if you want any instructions on exactly how to do that and I will add instuctions in this repo.
+Otherwise, an Ant Media Enterprise Server is available in the Azure market place. It sets up a VM that can be held in 'unallocated' state to save cost and put live for testing on demand.  Let me know if you want any instructions on exactly how to do this and I will add instuctions in this repo.
 
 #### Using OBS to publish a stream
 
@@ -208,7 +218,7 @@ If you are looking for content, try adding a Browser entry to the Sources pane i
   
 ### Writing a new Provider.
   
-Anyone who wants a mew provider will need the following to get started.
+Anyone who wants a mew provider will need the following to get started. I'm available to assist.
 
   - Have access to a deployment of the WebRTC server for testing.
   - Setup a test page in a basic HTML page with a <video> tag that displays a published live WebRTC stream with ultra low latency.
@@ -225,4 +235,16 @@ WebRTC is an standard and implementations are available on most platforms.  Port
 - Writing a second WebRTC Provider perhaps for Janus WebRTC Server.
 - SDK7 version
 - Creating a Smart Item with the new SDK7 smart items when it is available.
+
+### What's New
+
+We are working on:
+- A better way to setup the test project from this repo.
+- Getting the "Just a Video Screen" test passing with code and instructions from this repo.
+
+What's next
+- Continuing with test scenes to work towards getting them all developed and passing.
+- Preparing for user testing.
+- Writing documentation for Decentraland [Docs](https://docs.decentraland.org/).
+
   
