@@ -46,11 +46,11 @@ copy path files and overwrite
 Create a sym link between the videoscene and the kernel so that the SDK scene used the new patched kernel. Don't run npm install in the Videodcene folder. Patched node_modules are already included.
 
 ```
-cd videoscene
+cd Kernel
 npm link
 
-cd kernel
-npm link /home/user/dcl-readme-test/DclLowLatency/videoscene        # your path.
+cd videoscene
+npm link @dcl/Kernel
 ```
 
 Ensure your video stream is running. Then add your video credentials to the scene game.ts file.
@@ -69,6 +69,7 @@ cd kernel
 make watch
 ```
 Wait until the kernel builds fully.
+Then stop the server. Ctrl-C.
 
 ```
 cd videoscene
