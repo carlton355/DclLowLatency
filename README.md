@@ -6,7 +6,7 @@ Ultra Low Latency Video enables a number of applications that are not possible w
 
 ***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, reviews from stakeholders and end users are complete and documentation is ready.***
 
-**This repo is large and contains npm node_module files since some @dcl packages have been modified.** 
+**This repo is large and contains npm node_module files in the sample scene since some @dcl packages have been modified.** 
 
 See [What's New](#whats-new) for an update on what we are working on now and next.
 
@@ -148,7 +148,7 @@ This following test scenes and scenarios are in development. Here is their statu
 
 | Test Case Title   | Developed    |  Status       | Link |
 | ---    | ---   | ---     | --- |
-| Just a Video Screen | In Development | &#10060; | ... |
+| Just a Video Screen | In Development | &#9989; | [Just A Video Screen](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Just%20a%20Video%20Screen) |
 | Audio Test | In Development | &#10060; | ... |
 | Replace Video Test | In Development | &#10060; | ... |
 | Running Adjacent Video Scenes | In Development | &#10060; | ... |
@@ -168,38 +168,8 @@ There may be licensing considerations with using sample connection code from Web
 
 ### Running a Test Scene with the Realtime Components
 
-**Note: We are working on simpler way to do this.  Stay tuned.** 
+To run a test scene follow the instruction for the [Just a Video Screen](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Just%20a%20Video%20Screen) test scene.
 
-These components are not yet an offical part of the SDK. If you'd like to run the sample code, use this process. Don't run ***npm install*** on the files as all the node modules are already included and some have been modified for this test.
-
-First ensure you have a stream that you are running.
-You'll need to be running the Decentraland SDK version 6.11.10
-
-Clone the repo:
-
-```
- git clone https://github.com/carlton355/dcllowlatency
-```
-
-Navigate to the Kernel folder and run ***make watch***. Wait until it completes.
-We run this inside WSL2 on Ubuntu.
-```
- make watch
-```
-
-Navigate to the VideoScene folder and edit the VideoRealtimeStream constructor. Add your url, streamId.
-```
-code .
-```
-look for the SDK code file src/game.ts in the explorer pane.
-
-Save your changes and run:
-```
-dcl start
-```
-
-You should see a blank black screen on a preview scene. Click the block to start the video. 
-  
 #### Getting a Stream
 
 I am able to run a test server for anyone testing this. You can buzz me on Discord for details.
@@ -239,8 +209,11 @@ WebRTC is an standard and implementations are available on most platforms.  Port
 ### What's New
 
 We are working on:
-- A better way to setup the test project from this repo.
-- Getting the "Just a Video Screen" test passing with code and instructions from this repo.
+- We are continuting to build test scenes. 
+
+What we completed recently
+- We created a better way to setup the test project from this repo.
+- We got the "Just a Video Screen" test passing with code and instructions.
 
 What's next
 - Continuing with test scenes to work towards getting them all developed and passing.
