@@ -10,8 +10,9 @@ You'll need a published WebRTC video stream. Know the **url** and the **streamId
 
 #### Steps
 
-Clone the DclLowLatency repo.
+In a new folder. Clone the DclLowLatency repo.
 
+**We run this test in WSL2.**
 ```
 git clone https://github.com/carlton355/DclLowLatency
 ```
@@ -36,21 +37,20 @@ npm install
 ```
 
 Copy the contents of the kernel-patch folder from the DclLowLatency repo. This will prompt to replace files in the kernel repo with the patch files.
+Use explorer or use your paths: Use your paths. For example: 
 
 ```
-cd ..
-xcopy "kernel-patch\*.*" kernel\*.*
-
+copy path files and overwrite
 ```
 
-Create a sym link between the videoscene and the kernel so that the SDK scene used the new patched kernel.
+Create a sym link between the videoscene and the kernel so that the SDK scene used the new patched kernel. Don't run npm install in the Videodcene folder. Patched node_modules are already included.
 
 ```
 cd videoscene
 npm link
 
 cd kernel
-npm link /home/user/dcl-readme-test/vs        # your path.
+npm link /home/user/dcl-readme-test/DclLowLatency/videoscene        # your path.
 ```
 
 Ensure your video stream is running. Then add your video credentials to the scene game.ts file.
