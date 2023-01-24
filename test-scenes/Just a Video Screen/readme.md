@@ -1,14 +1,14 @@
-Test Scene - Just a Video Screen
+### Test Scene - Just a Video Screen
 
-Test Purpose
+#### Test Purpose
 
-Test the components display video correctly.
+Test the components correctly display video.
 
-Pre-requisites
+#### Pre-requisites
 
-You'll need a published WebRTC video stream. Know the url and the streamId for the stream. 
+You'll need a published WebRTC video stream. Know the **url** and the **streamId** for the stream. 
 
-Steps
+#### Steps
 
 Clone the DclLowLatency repo.
 
@@ -75,7 +75,7 @@ cd videoscene
 dcl start
 ```
 
-Outcome
+#### Outcome
 
 When the scene starts. You observe your avatar, a large rectangular plane and a cube. No video is showing.
 The cube is clickable. Interact with the cube and the video will start.
