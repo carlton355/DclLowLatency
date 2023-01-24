@@ -83,3 +83,13 @@ The cube is clickable. Interact with the cube and the video will start.
 
 Observe your video.
 The test passes.
+
+
+#### Troubleshooting
+
+Check the sym link was created correctly. list Npm links within the Kernel project. Output should look similar to this.
+```
+npm ls --link
+dcl-kernel@6.4.2 /home/carl355/rm-test/Kernel
+└── dcl-project@1.0.0 extraneous -> /home/carl355/rm-test/DclLowLatency/videoscene
+```
