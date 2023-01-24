@@ -60,7 +60,7 @@ cd videoscene
 code .        # opens vs code
 ```
 
-Edit the VideoRealtimeTexture to add your URL and streamId. Save changes and exit.
+Edit the VideoRealtimeTexture to add your URL and streamId. An game.ts we tested is provided in this folder for reference. Save changes and exit.
 
 Now we run the new local kernel and start the scene.
 

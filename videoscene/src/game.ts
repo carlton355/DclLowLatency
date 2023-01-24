@@ -1,14 +1,10 @@
-//const video = new VideoClip("video/up.mp4");
-//const videoTexture = new VideoTexture(video);
-
-const stream = new VideoRealtimeStream("https://stream.yourserver.net/WebRTCAppEE/", "89654B1F-C18F-4B8D-91BC-74F653069154", "AntMediaEnterprise");
+const stream = new VideoRealtimeStream("https://stream.yourserver.net:5443/WebRTCAppEE/", "89654B1F-C18F-4B8D-91BC-74F653069154", "AntMediaEnterprise");
 const videoTexture = new VideoRealtimeTexture(stream);
 
 const material = new Material();
 const entity = new Entity();
 
 material.albedoTexture = videoTexture;
-//material.albedoColor = Color4.Black();
 
 const planeShape = new PlaneShape();
 entity.addComponent(planeShape);
