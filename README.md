@@ -4,7 +4,7 @@ These components allow Video Streaming into Decentraland at Ultra Low Latency (<
 
 Ultra Low Latency Video enables a number of applications that are not possible with higher latency video streams.
 
-***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, reviews from stakeholders and end users are complete and documentation is ready.***
+***Note: this repo is not the final deliverable for the DclLowLatency project. This is an independent runnable project showcasing the tech.  The plan is for the final version to be added to the next Decentraland SDK6 once all tests pass, all reviews from stakeholders and end users are complete and documentation is ready.***
 
 **This repo is large and contains npm node_module files in the sample scene since some @dcl packages have been modified.** 
 
@@ -54,7 +54,7 @@ An early initial survey of SDK users revealed the following requirements.
 
 ### WebRTC
 
-WebRTC was selected as the supported protocol. It is a free and open source project originally initiated by Google. It handles video in a fundementally different way from other streaming protocols, achieves the target latency and is available across many devices.
+WebRTC was selected as the supported protocol. It is a free and open source project originally initiated by Google. It handles video in a fundementally different way from other streaming protocols. It achieves the target latency and is available across many devices.
 
 #### Standards and Open Source
 
@@ -62,7 +62,7 @@ The main tech to be considered is WebRTC which supports ultra-low latency video.
 
 ### Architectural Approach
 
-One of the main aims of the architecture is to hide the complications of the WebRTC protocol from the user. WebRTC uses signaling servers, stun servers and a moderately complex protocol that we do not want to bother the SDK user with.
+One of the main aims of the architecture is to hide the complications of the WebRTC protocol from the user. WebRTC uses signaling servers, stun servers and a moderately complex protocol. We want to shield the SDK user from the underlying complexities of the protocol.
 
 #### Main SDK Components
 
@@ -99,7 +99,7 @@ Our research showed that pushing the rendering down to base OS level gave much b
 
 There are a number of WebRTC Servers available. Some are free and open source such as Janus WebRTC Server while others are high-end platform services such as Wowza.  It is also expected that users of the components will likely range from small hobby users up to larger corporate events, perhaps with tens of thousands of users.
 
-There is also no standard for signaling and different servers handle signaling in different ways.
+There is also no standard for signaling and different servers handle signaling in different ways. The provider model hides these differences from the SDK user as they are tackled during provider development.
 
 To support a range of different servers we have introduced a provider model where each supported server needs to implement an interface for connection and resource handling. The provider also handles connections to stun servers, signaling and the WebRTC client handling of the WebRTC protocol.
 
@@ -139,7 +139,7 @@ class AntMediaEnterpriseProvider
 ```
 
 #### Kernel Messages
-The new Unity components communicate with the Browser throught the Unity Web Interface. They essentially send setup and tear down messages to instruct the system to load and destroy the providers.  Play and stop messaged are handled throught the WebVideoPlayer via a video tag in the browser which then connects to the underlying WebRTC implementation in the browser. Considering various aspects such as performace, reuse and portability to future SDK, our research identified this approach as optimal.
+The new Unity components communicate with the Browser throught the Unity Web Interface. They essentially send setup and tear down messages to instruct the system to load and destroy the providers.  Play, stop, mute messaged are handled throught the WebVideoPlayer via a video tag in the browser which then connects to the underlying WebRTC implementation in the browser. Considering various aspects such as performace, reuse and portability to future SDK, our research identified this approach as optimal.
 
 #### Security
 A provider specific security mechanism may be available to ensure playing of streams only when the use is authorized. To support this a Decentraland SDK scene developer needs to be able to obtain an authorization token from a legitimate source.  This could be, for example, a call to an API to issue the token. This is an advanced feature and we will support it in the AntMediaEnterprise provider.
