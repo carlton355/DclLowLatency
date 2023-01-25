@@ -148,7 +148,8 @@ This following test scenes and scenarios are in development. Here is their statu
 
 | Test Case Title   | Developed    |  Status       | Link |
 | ---    | ---   | ---     | --- |
-| Just a Video Screen | In Development | &#9989; | [Just A Video Screen](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Just%20a%20Video%20Screen) |
+| Just a Video Screen | &#9989; | &#9989; | [Just A Video Screen](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Just%20a%20Video%20Screen) |
+| Low Latency Test | &#9989; | &#9989; | [Low Latency Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Low%20a%20Latency%20Test) |
 | Audio Test | In Development | &#10060; | ... |
 | Replace Video Test | In Development | &#10060; | ... |
 | Running Adjacent Video Scenes | In Development | &#10060; | ... |
