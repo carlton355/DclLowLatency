@@ -149,7 +149,7 @@ This following test scenes and scenarios are in development. Here is their statu
 | Test Case Title   | Developed    |  Status       | Link |
 | ---    | ---   | ---     | --- |
 | Just a Video Screen | &#9989; | &#9989; | [Just A Video Screen](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Just%20a%20Video%20Screen) |
-| Low Latency Test | &#9989; | &#9989; | [Low Latency Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Low%20a%20Latency%20Test) |
+| Low Latency Test | In Development | &#10060; | [Low Latency Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Low%20a%20Latency%20Test) |
 | Audio Test | In Development | &#10060; | ... |
 | Replace Video Test | In Development | &#10060; | ... |
 | Running Adjacent Video Scenes | In Development | &#10060; | ... |
@@ -213,7 +213,8 @@ We are working on:
 - We are continuting to build test scenes. 
 
 What we completed recently
-- We created a better way to setup the test project from this repo.
+- We added a new Low Latency Test.
+- We created a better way to setup the test project from this repo. You can now clone the Kernel and add patch files.
 - We got the "Just a Video Screen" test passing with code and instructions.
 
 What's next
