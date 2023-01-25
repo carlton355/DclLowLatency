@@ -213,8 +213,9 @@ We are working on:
 - We are continuting to build test scenes. 
 
 What we completed recently
-- We created a better way to setup the test project from this repo.
-- We got the "Just a Video Screen" test passing with code and instructions.
+- We added a new Low Latency Test.
+- We created a better way to setup the test project from this repo. You can now clone the Kernel and add patch files.
+- Tests passing: "Just a Video Screen", "Low Latency Test" with code and instructions.
 
 What's next
 - Continuing with test scenes to work towards getting them all developed and passing.
