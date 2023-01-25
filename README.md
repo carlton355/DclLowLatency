@@ -42,6 +42,8 @@ If you are more interested in the internals and wish to code review or contribut
 
 An early initial survey of SDK users revealed the following requirements.
 
+**Utility** The component should deliver Ultra Low Latency video and audio in a manner expected by a typical SDK user.
+
 **Usability:** The component interfaces should be easy to configure for the Scene Builders. Consider also, users will span from small hobby scenes to large scale events streaming from high grade commercial services. 
 
 **Performance:** A stream should not overly impact performance of scene rendering. Furthermore, all streams being rendered in adjacent land plots must not overly impact performance.
@@ -153,7 +155,7 @@ This following test scenes and scenarios are in development. Here is their statu
 | Audio Test | &#9989; | &#9989; | [Audio Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Audio%20Test) |
 | Replace Video Test | In Development | &#10060; | ... |
 | Running Adjacent Video Scenes | In Development | &#10060; | ... |
-| Throttling Test | In Development | &#10060; | ... |
+| Throttling Test | &#9989; | &#9989; | [Throttling Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Throttling%20Test) |
 | Two Scenes Spaced Across the World | In Development | &#10060; | ... |
 | Security Test with JWT | In Development | &#10060; | ... |
 
@@ -213,9 +215,9 @@ We are working on:
 - We are continuting to build test scenes. 
 
 What we completed recently
+- Tests passing: "Just a Video Screen", "Low Latency Test", "Audio Test", "Throttling Test" with code and instructions.
 - We added a new Low Latency Test.
-- We created a better way to setup the test project from this repo. You can now clone the Kernel and add patch files.
-- Tests passing: "Just a Video Screen", "Low Latency Test", "Audio Test" with code and instructions.
+- We created a better way to setup the test project from this repo. You can now clone the Kernel from the main decentraland github and add patch files.
 
 What's next
 - Continuing with test scenes to work towards getting them all developed and passing.
