@@ -71,6 +71,8 @@ make watch
 Wait until the kernel builds fully.
 Then stop the server. Ctrl-C.
 
+Ensure stream is published, then:
+
 ```
 cd videoscene
 dcl start
