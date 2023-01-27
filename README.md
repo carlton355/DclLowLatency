@@ -154,10 +154,8 @@ This following test scenes and scenarios are in development. Here is their statu
 | Low Latency Test | &#9989; | &#9989; | [Low Latency Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Low%20Latency%20Test) |
 | Audio Test | &#9989; | &#9989; | [Audio Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Audio%20Test) |
 | Simple Resource Test | &#9989; | &#9989; | [Simple Resource Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Simple%20Resource%20Test) |
-| Replace Video Test | In Development | &#10060; | ... |
 | Running Adjacent Video Scenes | In Development | &#10060; | ... |
 | Throttling Test | &#9989; | &#9989; | [Throttling Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Throttling%20Test) |
-| Two Scenes Spaced Across the World | In Development | &#10060; | ... |
 | Security Test with JWT | In Development | &#10060; | ... |
 
 ### Licensing Considerations
