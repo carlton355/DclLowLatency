@@ -45,10 +45,8 @@ copy path files and overwrite
 
 Create a sym link between the videoscene and the kernel so that the SDK scene used the new patched kernel. Don't run npm install in the Videodcene folder. Patched node_modules are already included.
 
-**ToDo: this isn't correct. The videoscene's Kernel folder needs to symlink into Kernel\static**
-**Fix coming soon**
 ```
-cd Kernel
+cd Kernel/static
 npm link
 
 cd videoscene
