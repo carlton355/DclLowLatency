@@ -695,25 +695,24 @@
           const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
           if (newWindow != null) newWindow.opener = null
         })
-
-		const providers = {"AntMediaEnterprise" : getProvider("AntMediaEnterprise")};
 		
 		kernel.on('loadRealtimeVideo', ({ url, provider, streamId, videoId }) => {
-		 	console.log(`Loading Realtime video with url: ${url}, provider: ${provider}, streamId: ${streamId}, videoId: ${videoId}. `);
-			//startWebRtcForElement(url, streamId, videoId);
+		 	console.log(window.rtcvideo);
+			console.log(`Loading Realtime video with url: ${url}, provider: ${provider}, streamId: ${streamId}, videoId: ${videoId}. `);
 
-			if (window.getProvider(provider) == null)
+			if (window.rtcvideo.getProvider(provider) == null)
 		  	{
 		  		console.log(`no provider with the name ${provider} was found.`);
 		  		return;
 		  	}
 
-		  	providers[provider].ensureLoaded();
-		  	providers[provider].createStream(url, streamId, videoId);
+		  	window.rtcvideo.providers[provider].ensureLoaded();
+		  	window.rtcvideo.providers[provider].createStream(url, streamId, videoId);
 		 });
 
 		kernel.on('unloadRealtimeVideo', ({ videoId }) => {
 			console.log("*** In unloadRealtimeVideo ***");
+			window.rtcvideo.providers["AntMediaEnterprise"].destroyStream(videoId);
         })
 
         kernel.on('accountState', (account) => {
@@ -938,7 +937,6 @@
             }
         }
       }
-
 
       //
       // WebSocketAdaptor 
@@ -3170,7 +3168,9 @@ class WebRTCAdaptor
   var mute = false;
   var webRTCAdaptor = null;
 
-  window.load = loadWebRtcPlayer;
+  // turn on to receive resource management debug messages in the console
+  window.rtcvideo = {}; 
+  window.rtcvideo.debug = true;
 
 function webrtcNoStreamCallback(streamId) {
 	/**
@@ -3300,7 +3300,8 @@ function genericCallback(currentTech, streamId) {
           if (typeof description != "undefined") {
             console.log("Connecton closed: " + JSON.stringify(description));
           }
-	      document.getElementById(elementId).hidden = true;
+		  // we don't hide as we will be removing this element
+	      //document.getElementById(elementId).hidden = true;
         }
         else if (info == "bitrateMeasurement") {
 
@@ -3342,6 +3343,8 @@ function genericCallback(currentTech, streamId) {
       }
     });
 
+	window.rtcvideo.streams[elementId] = webRTCAdaptor;
+	if (window.rtcvideo.debug) console.log(window.rtcvideo);
   }
 
   function playWebRTCVideo(elementId) {
@@ -3361,9 +3364,6 @@ function genericCallback(currentTech, streamId) {
 	loadWebRtcPlayer(url, streamId, webrtcNoStreamCallback, elementId);
   }
 
-  window.playWebRTCVideo = playWebRTCVideo;
-  window.startWebRtcForElement = startWebRtcForElement;
-  
   function getProvider(providerName)
   {
 	if (providerName == "AntMediaEnterprise") return new AntMediaEnterpriseProvider();
@@ -3395,12 +3395,38 @@ function genericCallback(currentTech, streamId) {
 
 		// destroy the stream when component is destroyed.
 		destroyStream(videoId){
-			// todo: need to map videoId to streamId to remove the stream from the WebRtcAdaptor
+
+			if (window.rtcvideo.debug)
+			{ 
+				console.log(`rtcvideo.debug: start destroy stream with videoId ${videoId}.`);
+				console.log(window.rtcvideo);
+			}
+
+			const webRTCAdaptor = window.rtcvideo.streams[videoId];
+			webRTCAdaptor.stop(webRTCAdaptor.playStreamId[0]);
+			delete window.rtcvideo.streams[videoId];
+
+			if (window.rtcvideo.debug) console.log(`rtcvideo.debug: closing web socket for ${videoId}.`);
+			webRTCAdaptor.closeWebSocket();
+
+			if (window.rtcvideo.debug)
+			{ 
+				console.log(`rtcvideo.debug: after destroy stream with videoId ${videoId}.`);
+				console.log(window.rtcvideo);
+			}
+
+			// remove the video element
+			const el = document.getElementById(videoId);
+        	el.remove();
 		}
 	}
 
-	const providers = {"AntMediaEnterprise" : getProvider("AntMediaEnterprise")};
-	window.getProvider = getProvider;
+	window.rtcvideo.getProvider = getProvider;
+	window.rtcvideo.providers = {"AntMediaEnterprise" : getProvider("AntMediaEnterprise")};
+	window.rtcvideo.streams = {};
+
+	console.log("All rtc scripts loaded");
+	console.log(window.rtcvideo);
 
     </script>
 
