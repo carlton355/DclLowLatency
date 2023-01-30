@@ -697,22 +697,22 @@
         })
 		
 		kernel.on('loadRealtimeVideo', ({ url, provider, streamId, videoId }) => {
-		 	console.log(window.rtcvideo);
-			console.log(`Loading Realtime video with url: ${url}, provider: ${provider}, streamId: ${streamId}, videoId: ${videoId}. `);
+		 	rtcvideo.debug(rtcvideo);
+			rtcvideo.debug(`Loading Realtime video with url: ${url}, provider: ${provider}, streamId: ${streamId}, videoId: ${videoId}. `);
 
-			if (window.rtcvideo.getProvider(provider) == null)
+			if (rtcvideo.getProvider(provider) == null)
 		  	{
-		  		console.log(`no provider with the name ${provider} was found.`);
+		  		rtcvideo.debug(`no provider with the name ${provider} was found.`);
 		  		return;
 		  	}
 
-		  	window.rtcvideo.providers[provider].ensureLoaded();
-		  	window.rtcvideo.providers[provider].createStream(url, streamId, videoId);
+		  	rtcvideo.providers[provider].ensureLoaded();
+		  	rtcvideo.providers[provider].createStream(url, streamId, videoId);
 		 });
 
 		kernel.on('unloadRealtimeVideo', ({ videoId }) => {
-			console.log("*** In unloadRealtimeVideo ***");
-			window.rtcvideo.providers["AntMediaEnterprise"].destroyStream(videoId);
+			rtcvideo.debug("*** In unloadRealtimeVideo ***");
+			rtcvideo.providers["AntMediaEnterprise"].destroyStream(videoId);
         })
 
         kernel.on('accountState', (account) => {
@@ -3154,220 +3154,119 @@ class WebRTCAdaptor
 	}
 }
 
-  //
-  // Ant Media
-  //
+	window.rtcvideo = {};
+	rtcvideo.debugOn = true; // turn on to receive RTDebug messages in the console
+	rtcvideo.debug = (obj) => { if (rtcvideo.debugOn) console.debug("RTDebug: ", obj) };
+	rtcvideo.webRTCAdaptor = null;
 
-  var playOrder = ["webrtc"];
-  var iceConnected = false;
+	function loadWebRtcPlayer(url, noStreamCallback)
+	{
+		if (rtcvideo.webRTCAdaptor == null)
+		{
+			var iceConnected = false;
 
-  var token = "";
-  var subscriberId = undefined;
-  var subscriberCode = undefined;
-  var autoPlay = false;
-  var mute = false;
-  var webRTCAdaptor = null;
+			rtcvideo.webRTCAdaptor = new WebRTCAdaptor({
+				websocket_url: getWebsocketUrl(url),
+				mediaConstraints: {
+					video: false,
+					audio: false
+				},
+				peerconnection_config: {
+					'iceServers': [{'urls': 'stun:stun1.l.google.com:19302'}]
+				},
+				sdp_constraints: {
+					OfferToReceiveAudio: true,
+					OfferToReceiveVideo: true
+				},
+				isPlayMode: true,
+				debug: rtcvideo.debugOn,
+				callback: function (info, description) {
+					if (info == "initialized")
+					{
+						rtcvideo.debug("initialized");
+					}
+					else if (info == "streamInformation") {
+						rtcvideo.debug("stream information");
+						rtcvideo.webRTCAdaptor.play(description.streamId);
+					}
+					else if (info == "newStreamAvailable"){
+                		rtcvideo.debug("newStreamAvailable");
+                		rtcvideo.debug(description);
 
-  // turn on to receive resource management debug messages in the console
-  window.rtcvideo = {}; 
-  window.rtcvideo.debug = true;
-
-function webrtcNoStreamCallback(streamId) {
-	/**
- * If HLS is in the play order then try to play HLS, if not wait for WebRTC stream
- * In some cases user may want to remove HLS from the order and force to play WebRTC only
- * in these cases player only waits for WebRTC streams
- */
-	genericCallback("webrtc", streamId);
-}
-
-function genericCallback(currentTech, streamId) {
-
-	setTimeout(function () {
-		var index = playOrder.indexOf(currentTech);
-
-		if (currentTech == "webrtc") {
-			if (!iceConnected) {
-				if (index == -1 || index == (playOrder.length - 1)) {
-					index = 0;
+						const elementId = rtcvideo.streamToVideoId[description.streamId];
+                		const el = document.getElementById(elementId);
+                		el.srcObject = description.stream;
+					}
+					else if (info == "play_started") {
+						rtcvideo.debug("play started");
+					} else if (info == "play_finished") {
+						rtcvideo.debug("play finished");
+						//if play_finished event is received, it has two meanings
+						//1. stream is really finished 
+						//2. ice connection cannot be established and server reports play_finished event
+						// check that publish may start again
+						if (iceConnected) {
+							//webrtc connection was successful and try to play again with webrtc
+							setTimeout(function () {
+								rtcvideo.webRTCAdaptor.getStreamInfo(description.streamId);
+							}, 3000);
+						}
+						else {
+							//webrtc connection was not succesfull, switch the next play type(playOrder) if available 
+							if (typeof noStreamCallback != "undefined") {
+							noStreamCallback(obj.streamId);
+							}
+						}
+					}
+					else if (info == "closed") {
+						if (typeof description != "undefined") {
+							rtcvideo.debug("Connecton closed: " + JSON.stringify(description));
+						}
+					}
+					else if (info == "bitrateMeasurement") {
+						console.debug(description);
+					}
+					else if (info == "ice_connection_state_changed") {
+						console.debug("ice connection state changed to " + description.state);
+						if (description.state == "connected" || description.state == "completed") {
+							//it means the ice connection has been established
+							iceConnected = true;
+						}
+					}
+				},
+				callbackError: function (error) {
+					//some of the possible errors, NotFoundError, SecurityError, PermissionDeniedError
+					rtcvideo.debug("error callback: " + JSON.stringify(error));
+					if (error == "no_stream_exist") {
+							if (typeof noStreamCallback != "undefined") {
+								noStreamCallback(obj.streamId);
+							}
+					}
 				}
-				else {
-					index++;
-				}
-			}
+			});
 		}
-		else {
-			if (index == -1 || index == (playOrder.length - 1)) {
-				index = 0;
-			}
-			else {
-				index++;
-			}
-		}
+	}
+ 
+	function webrtcNoStreamCallback(streamId) {
+		rtcvideo.debug("webrtcNoStrreamCallback for streamId: " + streamId);
+	}
 
-		var tech = playOrder[index];
+	function getWebsocketUrl(url)
+	{
+		// convert http url to websocket url
+		// eg "https://stream.dragonpointslive.net:5443/WebRTCAppEE/"
+		// to "wss://stream.dragonpointslive.net:5443/WebRTCAppEE/websocket"
+		if (url.startsWith("ws")) return url;
+		const wssurl = url.replace("http", "ws");
+		const full = (wssurl.endsWith('/')) ? wssurl + "websocket" : wssurl + "/websocket";
+		rtcvideo.debug(`${url} was converted to ${full} as websocket address`);
+		return full;
+	}
 
-		if (tech == "webrtc") {
-			// It means there is no HLS stream, so try to play WebRTC stream
-			if (webRTCAdaptor == null) {
-				initializeWebRTCPlayer(streamId, token, webrtcNoStreamCallback);
-			}
-			else {
-				webRTCAdaptor.getStreamInfo(streamId);
-			}
-		}
-	}, 3000);
-}
-
-  function getWebsocketUrl(url)
-  {
-	// convert http url to websocket url
-	// eg "https://stream.dragonpointslive.net:5443/WebRTCAppEE/"
-	// to "wss://stream.dragonpointslive.net:5443/WebRTCAppEE/websocket"
-	if (url.startsWith("ws")) return url;
-	const wssurl = url.replace("http", "ws");
-	const full = (wssurl.endsWith('/')) ? wssurl + "websocket" : wssurl + "/websocket";
-	console.log(`${url} was converted to ${full} as websocket address`);
-	return full;
-  }
-
-  function loadWebRtcPlayer(url, streamId, noStreamCallback, elementId){
-
-      var pc_config = {
-      'iceServers': [{
-        'urls': 'stun:stun1.l.google.com:19302'
-      }]
-    };
-
-      var sdpConstraints = {
-      OfferToReceiveAudio: true,
-      OfferToReceiveVideo: true
-
-    };
-
-    var mediaConstraints = {
-      video: false,
-      audio: false
-    };
-
-    var websocketURL = getWebsocketUrl(url);
-
-    iceConnected = false;
-
-    webRTCAdaptor = new WebRTCAdaptor({
-      websocket_url: websocketURL,
-      mediaConstraints: mediaConstraints,
-      peerconnection_config: pc_config,
-      sdp_constraints: sdpConstraints,
-      remoteVideoId: elementId,
-      isPlayMode: true,
-      debug: true,
-      callback: function (info, description) {
-        if (info == "initialized") {
-          console.log("initialized");
-          iceConnected = false;
-          webRTCAdaptor.getStreamInfo(streamId);
-        }
-        else if (info == "streamInformation") {
-          console.log("stream information");
-          webRTCAdaptor.play(streamId, token, subscriberId, subscriberCode);
-        }
-        else if (info == "play_started") {
-          //joined the stream
-          console.log("play started");
-          playWebRTCVideo(elementId);
-        } else if (info == "play_finished") {
-          //leave the stream
-          console.log("play finished");
-          //if play_finished event is received, it has two meanings
-          //1. stream is really finished 
-          //2. ice connection cannot be established and server reports play_finished event
-          //check that publish may start again
-          if (iceConnected) {
-            //webrtc connection was successful and try to play again with webrtc
-            setTimeout(function () {
-              webRTCAdaptor.getStreamInfo(streamId);
-            }, 3000);
-          }
-          else {
-            //webrtc connection was not succesfull, switch the next play type(playOrder) if available 
-            if (typeof noStreamCallback != "undefined") {
-              noStreamCallback(streamId);
-            }
-          }
-        }
-        else if (info == "closed") {
-          if (typeof description != "undefined") {
-            console.log("Connecton closed: " + JSON.stringify(description));
-          }
-		  // we don't hide as we will be removing this element
-	      //document.getElementById(elementId).hidden = true;
-        }
-        else if (info == "bitrateMeasurement") {
-
-          if (!document.getElementById(elementId).paused) {
-            // we are playing
-          }
-
-          console.debug(description);
-          if (description.audioBitrate + description.videoBitrate > description.targetBitrate) {
-            // we could display a network warning here
-            setTimeout(function () {
-              // remove the network warning after some time
-            }, 3000);
-          }
-        }
-        else if (info == "ice_connection_state_changed") {
-          console.debug("ice connection state changed to " + description.state);
-          if (description.state == "connected" || description.state == "completed") {
-            //it means the ice connection has been established
-            iceConnected = true;
-          }
-        }
-        else if (info == "resolutionChangeInfo") {
-          console.log("Resolution is changed to " + description["streamHeight"]);
-          let getVideo = document.getElementById(elementId);
-          getVideo.pause();
-          setTimeout(function () { getVideo.play(); }, 2000);
-        }
-
-      },
-      callbackError: function (error) {
-        //some of the possible errors, NotFoundError, SecurityError, PermissionDeniedError
-        console.log("error callback: " + JSON.stringify(error));
-        if (error == "no_stream_exist") {
-          if (typeof noStreamCallback != "undefined") {
-            noStreamCallback(streamId);
-          }
-        }
-      }
-    });
-
-	window.rtcvideo.streams[elementId] = webRTCAdaptor;
-	if (window.rtcvideo.debug) console.log(window.rtcvideo);
-  }
-
-  function playWebRTCVideo(elementId) {
-
-	const el = document.getElementById(elementId);
-
-	el.play().then(function (value) {
-         console.log("play successful");
-       }).catch(function (error) {
-         console.log("error in playWebRTCVideo: " + error);
-       });
-  }
-
-  function startWebRtcForElement(url, streamId, elementId)
-  {
-	console.log("*** startWebRtcForElement for elementId: " + elementId);
-	loadWebRtcPlayer(url, streamId, webrtcNoStreamCallback, elementId);
-  }
-
-  function getProvider(providerName)
-  {
-	if (providerName == "AntMediaEnterprise") return new AntMediaEnterpriseProvider();
-  }
+	function getProvider(providerName)
+	{
+		if (providerName == "AntMediaEnterprise") return new AntMediaEnterpriseProvider();
+	}
 
 	// Provider model
   	class AntMediaEnterpriseProvider
@@ -3390,43 +3289,67 @@ function genericCallback(currentTech, streamId) {
 
 		// initialize and create the stream
 		createStream(url, streamId, videoId){
-			startWebRtcForElement(url, streamId, videoId);
+
+			loadWebRtcPlayer(url, webrtcNoStreamCallback);
+
+			const e = (event) => {
+				this.playStream(streamId, videoId);
+				rtcvideo.webRTCAdaptor.webSocketAdaptor.wsConn.removeEventListener('open', e);
+			};
+
+			if (rtcvideo.webRTCAdaptor == null || rtcvideo.webRTCAdaptor.webSocketAdaptor.connected == false)
+				rtcvideo.webRTCAdaptor.webSocketAdaptor.wsConn.addEventListener('open', e);
+			else
+				playStream(streamId, videoId);
+		}
+
+		playStream(streamId, videoId)
+		{	
+			rtcvideo.streams[videoId] = streamId;
+			rtcvideo.streamToVideoId[streamId] = videoId;
+			rtcvideo.webRTCAdaptor.play(streamId);
 		}
 
 		// destroy the stream when component is destroyed.
 		destroyStream(videoId){
 
-			if (window.rtcvideo.debug)
+			if (rtcvideo.debug)
 			{ 
-				console.log(`rtcvideo.debug: start destroy stream with videoId ${videoId}.`);
-				console.log(window.rtcvideo);
+				rtcvideo.debug(`rtcvideo.debug: start destroy stream with videoId ${videoId}.`);
+				rtcvideo.debug(rtcvideo);
 			}
 
-			const webRTCAdaptor = window.rtcvideo.streams[videoId];
-			webRTCAdaptor.stop(webRTCAdaptor.playStreamId[0]);
-			delete window.rtcvideo.streams[videoId];
+			const streamId = rtcvideo.streams[videoId];
+			rtcvideo.webRTCAdaptor.stop(streamId);
+			delete rtcvideo.streams[videoId];
+			delete rtcvideo.streamToVideoId[streamId];
 
-			if (window.rtcvideo.debug) console.log(`rtcvideo.debug: closing web socket for ${videoId}.`);
-			webRTCAdaptor.closeWebSocket();
-
-			if (window.rtcvideo.debug)
-			{ 
-				console.log(`rtcvideo.debug: after destroy stream with videoId ${videoId}.`);
-				console.log(window.rtcvideo);
+			if (rtcvideo.webRTCAdaptor.playStreamId.length == 0)
+			{
+				rtcvideo.debug(`rtcvideo.debug: closing web socket for ${videoId}.`);
+				rtcvideo.webRTCAdaptor.closeWebSocket();
+				rtcvideo.debug("Destroying WebRTCAdaptor");
+				rtcvideo.webRTCAdaptor = null;
 			}
+			 
+			rtcvideo.debug(`after destroy stream with videoId ${videoId}.`);
+			rtcvideo.debug(rtcvideo);
 
 			// remove the video element
 			const el = document.getElementById(videoId);
         	el.remove();
+			rtcvideo.debug(`Video Element ${videoId} was removed from the DOM.`);
 		}
 	}
 
-	window.rtcvideo.getProvider = getProvider;
-	window.rtcvideo.providers = {"AntMediaEnterprise" : getProvider("AntMediaEnterprise")};
-	window.rtcvideo.streams = {};
+	rtcvideo.getProvider = getProvider;
+	rtcvideo.providers = {"AntMediaEnterprise" : getProvider("AntMediaEnterprise")};
+	rtcvideo.streams = {};
+	rtcvideo.streamToVideoId = {};
 
-	console.log("All rtc scripts loaded");
-	console.log(window.rtcvideo);
+	rtcvideo.debug("All rtc scripts loaded");
+	rtcvideo.debug(JSON.parse(JSON.stringify(rtcvideo)));
+	rtcvideo.debug(rtcvideo);
 
     </script>
 

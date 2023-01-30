@@ -154,7 +154,7 @@ This following test scenes and scenarios are in development. Here is their statu
 | Low Latency Test | &#9989; | &#9989; | [Low Latency Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Low%20Latency%20Test) |
 | Audio Test | &#9989; | &#9989; | [Audio Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Audio%20Test) |
 | Simple Resource Test | &#9989; | &#9989; | [Simple Resource Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Simple%20Resource%20Test) |
-| Running Adjacent Video Scenes | In Development | &#10060; | ... |
+| Running Adjacent Video Scenes | &#9989; | &#9989; | [Running Adjacent Video Scenes](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Running%20Adjacent%20Video%20Scenes) |
 | Throttling Test | &#9989; | &#9989; | [Throttling Test](https://github.com/carlton355/DclLowLatency/tree/main/test-scenes/Throttling%20Test) |
 | Security Test with JWT | In Development | &#10060; | ... |
 
@@ -214,12 +214,12 @@ We are working on:
 - We are continuting to build test scenes. 
 
 What we completed recently
-- Tests passing: "Just a Video Screen", "Low Latency Test", "Audio Test", "Throttling Test" with code and instructions.
+- All the main tests are now passing.
+- Tests passing: "Just a Video Screen", "Low Latency Test", "Audio Test", "Simple Resource Test", "Throttling Test" and "Running Adjacent Video Scenes" with code and instructions.
 - We added a new Low Latency Test.
 - We created a better way to setup the test project from this repo. You can now clone the Kernel from the main decentraland github and add patch files.
 
 What's next
-- Continuing with test scenes to work towards getting them all developed and passing.
 - Preparing for user testing.
 - Writing documentation for Decentraland [Docs](https://docs.decentraland.org/).
 
