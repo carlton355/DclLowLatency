@@ -211,7 +211,7 @@ WebRTC is an standard and implementations are available on most platforms.  Port
 ### What's New
 
 We are working on:
-- We are continuting to build test scenes. 
+- We are gathering feedback from testers and the dev team.
 
 What we completed recently
 - All the main tests are now passing.
