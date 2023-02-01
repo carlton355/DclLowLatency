@@ -38,6 +38,8 @@ The components were developed with Decentraland SDK (decentraland-ecs) 6.11.10
 If you are a Decentraland SDK user and just want to try the components in a simple scene, then skip to the section on testing [here](#running-a-test-scene-with-the-realtime-components).
 If you are more interested in the internals and wish to code review or contribute somehow - then welcome!. There's lots of additional information here for you too.
 
+The code has not yet been added to the Decentraland SDK.  Currently this repository contains a working version of the components that require some command line alchemy to get started. Therefor the audience for this test is an advanced SDK user who is comfortable with extra setup steps.
+
 ### Requirements
 
 An early initial survey of SDK users revealed the following requirements.
