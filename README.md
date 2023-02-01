@@ -189,8 +189,10 @@ If you are looking for content, try adding a Browser entry to the Sources pane i
 ***Important for best results*** Tell OBS to optimize for Low Latency. Go to Output > Output Mode:Advanced and set the Tune:ZeroLatency dropdown.
   
 ### Writing a new Provider.
-  
-Anyone who wants a mew provider will need the following to get started. I'm available to assist.
+
+These components require a WebRTC video server. Since WebRTC has no standard for signaling and there are a variety of servers available we have introduced a Provider model that allows server clients to be plugged into the code. Writing a server is fairly straightforward and we have provided a working version for Ant Media Server Enterprise.
+
+Anyone who wants a to develop a provider will need the following to get started. I'm available to assist.
 
   - Have access to a deployment of the WebRTC server for testing.
   - Setup a test page in a basic HTML page with a <video> tag that displays a published live WebRTC stream with ultra low latency.
