@@ -50,7 +50,7 @@ cd Kernel/static
 npm link
 
 cd videoscene
-npm link @dcl/Kernel
+npm link @dcl/kernel
 ```
 
 Ensure your video stream is running. Then add your video credentials to the scene game.ts file.
