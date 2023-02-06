@@ -12,47 +12,9 @@ You'll need a published WebRTC video stream. Know the **url** and the **streamId
 
 In a new folder. Clone the DclLowLatency repo.
 
-**We run this test in WSL2.**
 ```
 git clone https://github.com/carlton355/DclLowLatency
 ```
-
-Clone the decentraland kernel repo.
-
-```
-git clone https://github.com/decentraland/Kernel
-```
-
-Switch to the version of the kernel used for SDK 6.11.10
-
-```
-cd kernel
-git checkout c5115764918c744c8b6bd4c502277b3b536d92f8
-```
-
-Install dependencies. Run install inside the kernel folder.
-
-```
-npm install
-```
-
-Copy the contents of the kernel-patch folder from the DclLowLatency repo. This will prompt to replace files in the kernel repo with the patch files.
-Use explorer or use your paths: Use your paths. For example: 
-
-```
-copy path files and overwrite
-```
-
-Create a sym link between the videoscene and the kernel so that the SDK scene used the new patched kernel. Don't run npm install in the Videodcene folder. Patched node_modules are already included.
-
-```
-cd Kernel/static
-npm link
-
-cd videoscene
-npm link @dcl/kernel
-```
-
 Ensure your video stream is running. Then add your video credentials to the scene game.ts file.
 
 ```
@@ -62,19 +24,8 @@ code .        # opens vs code
 
 Edit the VideoRealtimeTexture to add your URL and streamId. An game.ts we tested is provided in this folder for reference. Save changes and exit.
 
-Now we run the new local kernel and start the scene.
-
+In the videoscene folder run:
 ```
-cd kernel
-make watch
-```
-Wait until the kernel builds fully.
-Then stop the server. Ctrl-C.
-
-Ensure stream is published, then:
-
-```
-cd videoscene
 dcl start
 ```
 
